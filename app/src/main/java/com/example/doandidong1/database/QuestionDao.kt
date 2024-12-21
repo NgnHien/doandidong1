@@ -22,4 +22,10 @@ interface QuestionDao {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun addQuestion(question: Question): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertQuestion(question: Question): Long
+
+    @Query("DELETE FROM questions")
+    suspend fun deleteAllQuestions()
 }

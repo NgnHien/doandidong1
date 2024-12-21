@@ -8,7 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.doandidong1.R
 import com.example.doandidong1.adapter.BannerAdapter
+import com.example.doandidong1.database.DatabaseAPI
+import com.example.doandidong1.database.OnDatabaseCallback
 import com.example.doandidong1.efects.DepthPageTransformer
+import com.example.doandidong1.data.sampleQuestions
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var bannerViewPager: ViewPager2
@@ -51,6 +54,21 @@ class HomeActivity : AppCompatActivity() {
             }
         })
         startAutoScroll()
+
+        val databaseAPI = DatabaseAPI(this)
+
+        // Thêm câu hỏi vào Room
+        sampleQuestions.forEach { question ->
+            databaseAPI.themCauHoi(question, object : OnDatabaseCallback {
+                override fun onSuccess(id: Long) {
+                    println("Câu hỏi đã được thêm với ID: $id")
+                }
+
+                override fun onFailure(e: Exception) {
+                    println("Lỗi khi thêm câu hỏi: ${e.message}")
+                }
+            })
+        }
     }
 
     private fun updateDots(position: Int) {
@@ -88,17 +106,27 @@ class HomeActivity : AppCompatActivity() {
         }
         handler.post(runnable)
     }
-
-
-
-
-
-
-
-
-
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null) // Hủy callback khi activity bị destroy để tránh leak memory
     }
+    // Ham them cau hoi vao database
+//    private fun getListQuestion() {
+//        databaseAPI.getAllQuestions().observe(this) { questions ->
+//            if (questions.isEmpty()) {
+//                sampleQuestions.forEach { question ->
+//                    databaseAPI.themCauHoi(question, object : OnDatabaseCallback {
+//                        override fun onSuccess(id: Long) {
+//                            println("Câu hỏi đã được thêm với ID: $id")
+//                        }
+//                        override fun onFailure(e: Exception) {
+//                            println("Lỗi khi thêm câu hỏi: ${e.message}")
+//                        }
+//                    })
+//                }
+//            } else {
+//                println("Dữ liệu đã tồn tại, không cần thêm.")
+//            }
+//        }
+//    }
 }

@@ -4,11 +4,14 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.doandidong1.data.Converters
 import com.example.doandidong1.entity.Question
 import com.example.doandidong1.entity.Test
 import com.example.doandidong1.entity.TestQuestion
 
 @Database(entities = [Question::class , Test::class , TestQuestion::class], version = MyRoomDatabase.DB_VERSION)
+@TypeConverters(Converters::class) // Đăng ký TypeConverter ở đây
 abstract class MyRoomDatabase : RoomDatabase(){
     companion object{
         // 1.Định Nghĩa thuộc tính chung của CSDL , trong đó DB_INSTANCE chỉ được tạo 1 lần và các luồng luôn nhìn thấy giá trị mới nhất
